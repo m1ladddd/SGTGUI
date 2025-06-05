@@ -1,0 +1,49 @@
+@startuml App Use Case
+skinparam actorStyle awesome
+"Beginner User" as Beginner
+"Advanced User" as Advanced
+"Administrator" as Admin
+
+left to right direction
+
+package "Smart Grid App" {
+    usecase "Change Scenario" as UC1
+    usecase "Troubleshoot Table" as UC2
+    usecase "Switch User Mode" as UC3
+    usecase "Switch Difficulty Level" as UC4
+    usecase "Enable Table View" as UC5
+    usecase  "Manage Theme" as UC6
+    usecase "Edit Module Parameters" as UC7
+    usecase "Add Component to Module" as UC8
+    usecase "Remove Component from Module" as UC9
+    usecase "Enable or Disable Cable" as UC10
+    usecase "View Calculations Results" as UC11
+    usecase "View Debug logs" as UC12
+    usecase "Manage Restrictions" as UC13
+}
+
+UC3 <--- Beginner
+UC4 <--- Beginner
+UC5 <--- Beginner
+UC6 <--- Beginner
+UC7 <--- Beginner
+
+Advanced ---> UC3
+Advanced ---> UC4
+Advanced ---> UC5
+Advanced ---> UC6
+Advanced ---> UC7
+Advanced ---> UC8
+Advanced ---> UC9
+Advanced ---> UC10
+Advanced ---> UC11
+
+UC1 <-- Admin
+UC2 <-- Admin
+UC3 <-- Admin
+UC5 <-- Admin
+UC6 <-- Admin
+UC12 <-- Admin
+UC13 <-- Admin
+
+@enduml

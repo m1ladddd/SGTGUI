@@ -1,0 +1,35 @@
+@startuml Sequence diagram
+
+box "Smart Grid App"
+participant App
+participant "App UDP Listener"
+participant "Mqtt App Client"
+end box
+
+box "Simulation PC"
+participant "Local Mqtt Broker"
+participant Simulation
+end box
+
+activate App
+activate "Local Mqtt Broker"
+activate Simulation
+activate "App UDP Listener"
+
+App -> "App UDP Listener": Bind UDP Listener
+
+"App UDP Listener" <- Simulation : Broadcast
+
+App <- "App UDP Listener": Broker IP
+
+deactivate "App UDP Listener"
+
+create "Mqtt App Client"
+
+App -> "Mqtt App Client" : Create Client
+
+activate "Mqtt App Client"
+
+"Mqtt App Client" -> "Local Mqtt Broker" : Connect to broker
+
+@enduml

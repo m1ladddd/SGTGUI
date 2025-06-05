@@ -1,0 +1,71 @@
+@startuml Sequence diagram
+
+== Initialization ==
+
+box "Smart Grid App"
+participant App
+participant Listener
+participant "Mqtt Client"
+end box
+
+box "Simulation PC"
+participant "Local Mqtt Broker"
+participant Simulation
+end box
+
+box "Smart Grid Table"
+participant "Table Section Mqtt Clients"
+participant "Table Section controllers"
+end box
+
+activate App
+activate "Local Mqtt Broker"
+activate Simulation
+
+activate "Table Section controllers"
+"Table Section controllers" -> "Table Section Mqtt Clients" : Create Clients
+activate "Table Section Mqtt Clients"
+
+activate Listener
+
+
+"Table Section Mqtt Clients" -> "Local Mqtt Broker" : Connect to broker
+App -> Listener: Bind UDP Listener
+
+Listener <- Simulation : Broadcast
+
+App <- Listener: Broker IP
+deactivate Listener
+
+create "Mqtt Client"
+
+App -> "Mqtt Client" : Create Client
+activate "Mqtt Client"
+
+"Mqtt Client" -> "Local Mqtt Broker" : Connect to broker
+"Mqtt Client" -> "Local Mqtt Broker" : Request Properties JSON and config files sent
+"Local Mqtt Broker" -> "Simulation" : Request Properties JSON and config files received
+"Local Mqtt Broker" <- "Simulation" : Publish Properties JSON and config files
+"Mqtt Client" <- "Local Mqtt Broker" : Properties JSON and config files received
+App <- "Mqtt Client" : Stored Propeties and configs
+
+== Program Loop ==
+
+"Local Mqtt Broker" <- "Table Section Mqtt Clients" : Publish Grid Updates
+Simulation <- "Local Mqtt Broker" : Receive Grid Updates
+Simulation -> Simulation : Recalculate Grid
+Simulation -> "Local Mqtt Broker" : Update Grid Visuals
+"Table Section Mqtt Clients" <- "Local Mqtt Broker" : Receive Grid Updates
+"Table Section Mqtt Clients" -> "Table Section controllers" : Update Table Section actuators
+"Mqtt Client" <- "Local Mqtt Broker" : Receive Grid GUI Updates
+App <- "Mqtt Client" : Update UI
+App -> "Mqtt Client" : Grid parameter changes
+"Mqtt Client" ->  "Local Mqtt Broker": Parameter change command sent
+"Local Mqtt Broker" ->  "Simulation": Parameter change command received
+Simulation -> Simulation : Recalculate Grid
+Simulation -> "Local Mqtt Broker" : Changes Grid Visuals
+"Table Section Mqtt Clients" <- "Local Mqtt Broker" : Receive Grid Changes
+"Table Section Mqtt Clients" -> "Table Section controllers" : Update Table Section actuators
+"Mqtt Client" <- "Local Mqtt Broker" : Receive Grid GUI Changes
+
+@enduml

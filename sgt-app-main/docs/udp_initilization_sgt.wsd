@@ -1,0 +1,35 @@
+@startuml Sequence diagram
+
+box "Smart Grid Table"
+participant "Table Section Boss Controller"
+participant "Table Section UDP Listener"
+participant "Mqtt Section Client"
+end box
+
+box "Simulation PC"
+participant "Local Mqtt Broker"
+participant Simulation
+end box
+
+activate "Table Section Boss Controller"
+activate "Local Mqtt Broker"
+activate Simulation
+activate "Table Section UDP Listener"
+
+"Table Section Boss Controller" -> "Table Section UDP Listener": Bind UDP Listener
+
+"Table Section UDP Listener" <- Simulation : Broadcast
+
+"Table Section Boss Controller" <- "Table Section UDP Listener": Broker IP
+
+deactivate "Table Section UDP Listener"
+
+create "Mqtt Section Client"
+
+"Table Section Boss Controller" -> "Mqtt Section Client" : Create Client
+
+activate "Mqtt Section Client"
+
+"Mqtt Section Client" -> "Local Mqtt Broker" : Connect to broker
+
+@enduml

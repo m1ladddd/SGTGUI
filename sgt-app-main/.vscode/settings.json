@@ -1,0 +1,5 @@
+{
+	"cmake.configureOnOpen": false,
+	"dart.flutterTestAdditionalArgs": ["--no-sound-null-safety"],
+	"cmake.sourceDirectory": "${workspaceFolder}/windows/flutter"
+}

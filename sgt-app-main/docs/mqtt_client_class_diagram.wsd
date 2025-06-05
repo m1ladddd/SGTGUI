@@ -1,0 +1,40 @@
+@startuml Class Diagram
+abstract class  "MqttBaseHandler" as a1 {
+    MqttClient client
+    MqttQos qosLevel
+    bool subscriptionEstablished
+    String subscriptionTopic
+
+    MqttBaseHandler(MqttClient client)
+    void setHost(String server)
+    void setPort(int port)
+    Future<int> connect(String username, String password)
+    void disconnect()
+    MqttSubscriptionStatus isSubscribed()
+    MqttConnectionState isConnected()
+    void subscribe(String topic)
+    void unsubscribe(String topic)
+    Stream<List<MqttReceivedMessage<MqttMessage>>>? getMessageStream()
+    void publishMessage(String topic, String message)
+    void onSubscribed(String topic)
+    void onDisconnected()
+    void onConnected()
+    void setDisconnectedCallback(void Function() callback)
+    void setConnectedCallback(void Function() callback)
+    void setSubscribedCallback(void Function(String) callback)
+    void setPingedCallback(void Function() callback)
+}
+
+class "MqttHandler (web)" as c1 {
+    MqttHandler(String host, String port)
+}
+
+class "MqttHandler (regular)" as c2 {
+    MqttHandler(String host, String port)
+}
+
+
+a1 <|-- c1
+a1 <|-- c2
+
+@enduml
